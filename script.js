@@ -1,51 +1,58 @@
-let num1 = 0;
-let num2 = 0;
-let operator = '';
-const operators = {
-    '&plus;': '+',
-    '&times;': '*',
-    '&minus;': '-',
-    '&divide;': '/'
+let operator = "";
+let previousNum = 0;
+let nextNum = 0;
+const display = document.querySelector(".display");
+
+function appendToDisplay(value) {
+    display.value += value;
 }
 
-//Calculator Logics
-function add(first, sec) {
-    return first + sec;
+function clearDisplay() {
+    display.value = "";
+    operator = "";
+    previousNum = 0;
+    nextNum = 0;
 }
 
-function subtract(first, sec) {
-    return first - sec;
-}
-
-function multiply(first, sec) {
-    return first * sec;
-}
-
-function divide(first, sec) {
-    return first / sec;
-}
-
-
-
-function operate(operator, num1, num2) {
-    switch (operator) {
-        case '+':
-            return add(num1, num2);
-        case '-':
-            return subtract(num1, num2);
-        case '*':
-            return multiply(num1, num2);
-        case '/':
-            return divide(num1, num2);
+function setOperator(operatorInput) {
+    if (display.value !== "") {
+        if (previousNum === 0) {
+            previousNum = parseFloat(display.value);
+            display.value = "";
+        } else {
+            calculate();
+        }
+        operator = operatorInput;
     }
 }
 
-//DOM Elements
-const output = document.querySelector('.output');
-const numsBtn = document.querySelectorAll('.numBtn');
-const operatorsBtn = document.querySelectorAll('.operatorBtn');
-const resultBtn = document.querySelector('.resultBtn');
-const clearBtn = document.querySelector('.clearBtn');
-const deleteBtn = document.querySelector('.deleteBtn');
-
-
+function calculate() {
+    if (operator !== "" && display.value !== "") {
+        nextNum = parseFloat(display.value);
+        let result;
+        switch (operator) {
+            case '+':
+                result = previousNum + nextNum;
+                break;
+            case '-':
+                result = previousNum - nextNum;
+                break;
+            case '*':
+                result = previousNum * nextNum;
+                break;
+            case '/':
+                if (nextNum === 0) {
+                    result = "Error: Division by zero";
+                } else {
+                    result = previousNum / nextNum;
+                }
+                break;
+            default:
+                return;
+        }
+        display.value = result;
+        previousNum = result;
+        nextNum = 0;
+        operator = "";
+    }
+}
